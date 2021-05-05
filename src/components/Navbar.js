@@ -1,11 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function Navbar() {
+function Navbar({ loadBlockchain, account }) {
     return (
-        <nav class="navbar navbar-light bg-light">
-            <Link class="navbar-brand mb-0 h1" to="/">Ticket Share</Link>
-            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Connect to Wallet</button>
+        <nav className="navbar navbar-light bg-light">
+            <Link className="navbar-brand mb-0 h1" to="/">Ticket Share</Link>
+            <button
+                className="btn btn-outline-primary my-2 my-sm-0"
+                onClick={loadBlockchain}
+            >
+                {account ? account.substring(0, 7) + '...' + account.substring(35, 42) : 'Connect to Wallet'}
+            </button>
         </nav>
     )
 }
