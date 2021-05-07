@@ -25,13 +25,14 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
         catch(err){
             console.error(err);
         }
-        
     }
 
     return (
         <div className="container">
-            <div className="card">
+            <div className="card mt-3" style={{ maxWidth: '600px', margin: 'auto'}}>
                 <div className="card-body">
+                    <h2 class="card-title text-center text-primary">Event Registration</h2>
+
                     <form className="mt-3" onSubmit={createEvent}>
                         <div className="form-group">
                             <label className="font-weight-bold">Name of your event</label>
@@ -52,23 +53,29 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
                                 onChange={(e) => setDescription(e.target.value)}></textarea>    
                         </div>
 
-                        <div className="form-group">
-                            <label className="font-weight-bold">Date</label>
-                            <input
-                                className="form-control"
-                                type="date"
-                                value={date}
-                                onChange={(e) => setDate(e.target.value)}/>
+                        <div className="row">
+                            <div className="col">
+                                <div className="form-group">
+                                    <label className="font-weight-bold">Date</label>
+                                    <input
+                                        className="form-control"
+                                        type="date"
+                                        value={date}
+                                        onChange={(e) => setDate(e.target.value)}/>
+                                </div>
+                            </div>
+                            <div className="col">
+                                <div className="form-group">
+                                    <label className="font-weight-bold">Time</label>
+                                    <input
+                                        className="form-control"
+                                        type="time"
+                                        value={time}
+                                        onChange={(e) => setTime(e.target.value)} />
+                                </div>
+                            </div>
                         </div>
-
-                        <div className="form-group">
-                            <label className="font-weight-bold">Time</label>
-                            <input
-                                className="form-control"
-                                type="time"
-                                value={time}
-                                onChange={(e) => setTime(e.target.value)} />
-                        </div>
+                        
 
                         <div className="form-group">
                             <label className="font-weight-bold">Location</label>
@@ -79,25 +86,30 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
                                 onChange={(e) => setLocation(e.target.value)} />
                         </div>
 
-                        <div className="form-group">
-                            <label className="font-weight-bold">Ticket Price</label>
-                            <input
-                                className="form-control"
-                                type="number"
-                                value={ticketPrice}
-                                onChange={(e) => setTicketPrice(e.target.value)} />
+                        <div className="row">
+                            <div className="col">
+                                <div className="form-group">
+                                    <label className="font-weight-bold">Ticket Price (In ETH)</label>
+                                    <input
+                                        className="form-control"
+                                        type="number"
+                                        value={ticketPrice}
+                                        onChange={(e) => setTicketPrice(e.target.value)} />
+                                </div>
+                            </div>
+                            <div className="col">
+                                <div className="form-group">
+                                    <label className="font-weight-bold">Available Quantity</label>
+                                    <input
+                                        className="form-control"
+                                        type="number"
+                                        value={quantity}
+                                        onChange={(e) => setQuantity(e.target.value)} />
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="form-group">
-                            <label className="font-weight-bold">Available Quantity</label>
-                            <input
-                                className="form-control"
-                                type="number"
-                                value={quantity}
-                                onChange={(e) => setQuantity(e.target.value)} />
-                        </div>
-
-                        <p>* Registration Cost: 1 ETH</p>
+                        <p className="text-muted">* Registration Cost: 0.1 ETH</p>
 
                         <button className="btn btn-primary" type="submit" disabled={!account}>Register Event</button>
                     </form>

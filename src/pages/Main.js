@@ -22,9 +22,13 @@ function Main({ ticketEventBlockchain, ticketEventCount }) {
     
     return (
         <div className="container">
-            <Link to="/eventregistration" className="btn btn-primary btn-lg my-3">
-                Register Event
-            </Link>
+            <div className="d-flex justify-content-between align-items-center">
+                <h1>List of Events</h1>
+                <Link to="/eventregistration" className="btn btn-primary btn-lg my-3">
+                    Register Event
+                </Link>
+            </div>
+           
 
             { ticketEvents.map(ticketEvent => (
                 <div className="card" key={ticketEvent.eventId}>
@@ -40,7 +44,9 @@ function Main({ ticketEventBlockchain, ticketEventCount }) {
                                 <button className="btn btn-primary btn-lg mt-4 mb-2">
                                     Promotion Reward Tally
                                 </button>
-                                <button  className="btn btn-secondary btn-lg">Earn Promotion Reward</button>
+                                <Link className="btn btn-secondary btn-lg" to={`/event/${ticketEvent.eventId}`}>
+                                    Earn Promotion Reward
+                                </Link>
                             </div>
                         </div>
                     </div>
