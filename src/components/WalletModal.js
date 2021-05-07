@@ -17,8 +17,6 @@ function WalletModal({ openWithTorus, openWithMetaMask }){
                             <div className="d-flex flex-column align-items-center">
                                 <button
                                     className="btn btn-primary btn-lg w-50 mb-3"
-                                    src="/images/portis_icon.png"
-                                    alt="Portis"
                                     onClick={openWithTorus}
                                     data-dismiss="modal"
                                 >

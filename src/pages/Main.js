@@ -31,7 +31,7 @@ function Main({ ticketEventBlockchain, ticketEventCount }) {
                     <div className="card-body">
                         <div className="row">
                             <div className="col-sm-6" >
-                                <h2><Link to={`/event/1`}>{ticketEvent.name}</Link></h2>
+                                <h2><Link to={`/event/${ticketEvent.eventId}`}>{ticketEvent.name}</Link></h2>
                                 <p>{ticketEvent.date} {ticketEvent.time}</p>
                                 <p>{ticketEvent.location}</p>
                                 <p>{window.web3.utils.fromWei(ticketEvent.ticketPrice, 'ether')} ETH</p>

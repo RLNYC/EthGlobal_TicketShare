@@ -4,6 +4,7 @@ contract TicketEvent {
     string public name = "Ticket Event";
     uint public ticketEventCount = 0;
     mapping(uint => Ticket) public tickets;
+    mapping(address => mapping(uint => TicketRef)) public ticketRefList;
 
     struct Ticket {
         uint eventId;
@@ -15,6 +16,12 @@ contract TicketEvent {
         uint ticketPrice;
         uint quantity;
         address payable owner;
+    }
+
+    struct TicketRef {
+        uint eventId;
+        address[] users;
+        uint[] points;
     }
 
     event TicketCreated (
@@ -29,12 +36,77 @@ contract TicketEvent {
         address payable owner
     );
 
+    event TicketRefLog(
+        uint eventId,
+        address[] users,
+        uint[] points
+    );
+
     constructor() public {}
 
-    function createEvent(string memory _name, string memory _description, string memory _date, string memory _time, string memory _location, uint _ticketPrice, uint _quantity) public {
-    ticketEventCount++;
+    function getUserPoint(uint _eventId, address _refer, address account) external returns (uint){
+        TicketRef storage _ticketRef = ticketRefList[_refer][_eventId];
+        
+        uint len = _ticketRef.users.length;
+        for(uint i = 0; i < len; i++){
+            if(_ticketRef.users[i] == account){
+                return _ticketRef.points[i];
+            }
+        }
+        
+        return 0;
+    }
 
-    tickets[ticketEventCount] = Ticket(ticketEventCount, _name, _description, _date, _time, _location, _ticketPrice, _quantity, msg.sender);
-    emit TicketCreated(ticketEventCount, _name, _description, _date, _time, _location, _ticketPrice, _quantity, msg.sender);
-  }
+    function userIsReferer(uint _eventId, address _refer, address account) external returns (bool){
+        TicketRef storage _ticketRef = ticketRefList[_refer][_eventId];
+        
+        uint len = _ticketRef.users.length;
+        for(uint i = 0; i < len; i++){
+            if(_ticketRef.users[i] == account){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    function createEvent(string memory _name, string memory _description, string memory _date, string memory _time, string memory _location, uint _ticketPrice, uint _quantity) external {
+        ticketEventCount++;
+
+        tickets[ticketEventCount] = Ticket(ticketEventCount, _name, _description, _date, _time, _location, _ticketPrice, _quantity, msg.sender);
+        emit TicketCreated(ticketEventCount, _name, _description, _date, _time, _location, _ticketPrice, _quantity, msg.sender);
+    }
+
+    // a user sign up for refer
+    function createReferer(uint _eventId) external {
+        ticketRefList[msg.sender][_eventId] = TicketRef(_eventId, new address[](0), new uint[](0));
+        ticketRefList[msg.sender][_eventId].users.push(msg.sender);
+        ticketRefList[msg.sender][_eventId].points.push(0);
+        emit TicketRefLog(_eventId, ticketRefList[msg.sender][_eventId].users, ticketRefList[msg.sender][_eventId].points);
+    }
+    
+    // friend of friend sign up for refer
+    function addReferer(uint _eventId, address referLink) external {
+        TicketRef storage _ticketRef = ticketRefList[referLink][_eventId];
+        _ticketRef.users.push(msg.sender);
+        _ticketRef.points.push(0);
+        ticketRefList[referLink][_eventId] = _ticketRef;
+        emit TicketRefLog(_eventId, _ticketRef.users, _ticketRef.points);
+    }
+    
+    function sendPoints(uint _eventId, address referLink, address referer) public {
+        TicketRef storage _ticketRef = ticketRefList[referLink][_eventId];
+        uint len = _ticketRef.points.length;
+        for(uint i = 0; i < len; i++){
+            if( _ticketRef.users[i] == referer){
+                _ticketRef.points[i] += 10;
+            }
+            else{
+                _ticketRef.points[i] += 5;
+            }
+        }
+        ticketRefList[referLink][_eventId] = _ticketRef;
+        emit TicketRefLog(_eventId, _ticketRef.users, _ticketRef.points);
+    }
+    
 }
