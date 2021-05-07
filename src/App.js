@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route  } from 'react-router-dom';
+import Torus from '@toruslabs/torus-embed';
 import Web3 from 'web3';
 
 import './App.css';
@@ -8,25 +9,48 @@ import Navbar from './components/Navbar';
 import EventDetail from './pages/EventDetail';
 import EventRegistration from './pages/EventRegistration';
 import Main from './pages/Main';
+import WalletModal from './components/WalletModal';
 
 function App() {
   const [account, setAccount] = useState('');
   const [ticketEventCount, setTicketEventCount] = useState(0);
   const [ticketEventBlockchain, setTicketEventBlockchain] = useState(null);
 
-  const loadBlockchain = async () => {
+  const openWithTorus = async () => {
+    const torus = new Torus();
+    await torus.init(
+      {
+        network: {
+          host: 'https://dev-testnet-v1-1.skalelabs.com',
+          chainId: "344435",
+          networkName: "Skale Test Network"
+        }
+      }
+    );
+    await torus.login();
+    const web3 = new Web3(torus.provider);
+    window.web3 = web3;
+
+    loadBlockchain();
+  }
+  
+  const openWithMetaMask = async () => {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
 
       await window.ethereum.enable();
+      loadBlockchain();
     }
     else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);
+      loadBlockchain();
     }
     else {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }
+  }
 
+  const loadBlockchain = async () => {
     const web3 = window.web3;
 
     const netId = await web3.eth.net.getId();
@@ -50,7 +74,7 @@ function App() {
   return (
     <Router className="App">
       <Navbar
-        loadBlockchain={loadBlockchain}
+        openWithTorus={openWithTorus}
         account={account} />
       <Switch>
         <Route path="/eventregistration">
@@ -72,6 +96,7 @@ function App() {
           }
         </Route>
       </Switch>
+      <WalletModal openWithTorus={openWithTorus} openWithMetaMask={openWithMetaMask} />
     </Router>
   );
 }
