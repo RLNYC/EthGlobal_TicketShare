@@ -1,6 +1,9 @@
 pragma solidity ^0.6.12;
 
+import "./Token.sol";
+
 contract TicketEvent {
+    Token private token;
     string public name = "Ticket Event";
     uint public ticketEventCount = 0;
     mapping(uint => Ticket) public tickets;
@@ -42,7 +45,9 @@ contract TicketEvent {
         uint[] points
     );
 
-    constructor() public {}
+    constructor(Token _token) public {
+        token = _token;
+    }
 
     function getUserPoint(uint _eventId, address _refer, address account) external returns (uint){
         TicketRef storage _ticketRef = ticketRefList[_refer][_eventId];
@@ -99,14 +104,29 @@ contract TicketEvent {
         uint len = _ticketRef.points.length;
         for(uint i = 0; i < len; i++){
             if( _ticketRef.users[i] == referer){
-                _ticketRef.points[i] += 10;
+                _ticketRef.points[i] += 1000000000000000000;
             }
             else{
-                _ticketRef.points[i] += 5;
+                _ticketRef.points[i] += 500000000000000000;
             }
         }
         ticketRefList[referLink][_eventId] = _ticketRef;
         emit TicketRefLog(_eventId, _ticketRef.users, _ticketRef.points);
+    }
+
+    function withdrawTokens(uint _eventId, address _referLink, address _referer) external {
+        TicketRef storage _ticketRef = ticketRefList[_referLink][_eventId];
+        uint len = _ticketRef.points.length;
+        
+        for(uint i = 0; i < len; i++){
+            if( _ticketRef.users[i] == _referer){
+                token.mint(msg.sender, _ticketRef.points[i]);
+                _ticketRef.points[i] = 0;
+                emit TicketRefLog(_eventId, _ticketRef.users, _ticketRef.points);
+            }
+        }
+
+        ticketRefList[_referLink][_eventId] = _ticketRef;
     }
     
 }

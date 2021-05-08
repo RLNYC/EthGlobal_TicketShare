@@ -9,11 +9,11 @@ import { SKALE_CHAIN_ENDPOINT } from '../config';
 const web3Provider = new Web3.providers.HttpProvider(SKALE_CHAIN_ENDPOINT);
 let web3 = new Web3(web3Provider);
 
-function EventDetail({ ticketEventBlockchain, account }) {
+function EventDetail({ ticketEventBlockchain, getBalance, account }) {
     const { id, referLink, referer } = useParams();
     const [ticketEvent, setTicketEvent] = useState({});
     const [isReferer, setIsReferer] = useState(false);
-    const [point, setPoint] = useState(0);
+    const [point, setPoint] = useState('0');
     const [imageURL, setImageURL] = useState('');
 
     useEffect(() => {
@@ -80,6 +80,16 @@ function EventDetail({ ticketEventBlockchain, account }) {
         }
     }
 
+    const claimToken = async () => {
+        try{
+            await ticketEventBlockchain.methods.withdrawTokens(id, referLink || account, account).send({ from: account });
+            setPoint(0);
+            getBalance();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     return (
         <div className="container">
             <div className="row mt-4">
@@ -120,7 +130,10 @@ function EventDetail({ ticketEventBlockchain, account }) {
                     Create Referer Link
                 </button>
             }
-            <p className="mt-3"><strong>Your reward:</strong> {point} points</p>
+            <p className="mt-3"><strong>Your reward:</strong> {window.web3.utils?.fromWei(point.toString(), 'Ether')} TSH</p>
+            {point != 0 && <button className="btn btn-warning" onClick={claimToken}>
+                Claim TST
+            </button> }
         </div>
     )
 }

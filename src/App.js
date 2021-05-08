@@ -5,6 +5,7 @@ import Web3 from 'web3';
 
 import './App.css';
 import TicketEvent from './abis/TicketEvent.json';
+import Token from './abis/Token.json';
 import Navbar from './components/Navbar';
 import EventDetail from './pages/EventDetail';
 import EventRegistration from './pages/EventRegistration';
@@ -15,6 +16,8 @@ function App() {
   const [account, setAccount] = useState('');
   const [ticketEventCount, setTicketEventCount] = useState(0);
   const [ticketEventBlockchain, setTicketEventBlockchain] = useState(null);
+  const [tokenBlockchain, setTokenBlockchain] = useState(null);
+  const [tokens, setTokens] = useState(0);
 
   const openWithTorus = async () => {
     const torus = new Torus();
@@ -59,23 +62,33 @@ function App() {
     setAccount(accounts[0]);
 
     if(netId){
+      const token = new web3.eth.Contract(Token.abi, Token.networks[netId].address);
+      setTokenBlockchain(token)
       const ticketEvent = new web3.eth.Contract(TicketEvent.abi, TicketEvent.networks[netId].address);
       setTicketEventBlockchain(ticketEvent);
 
       const eventCount = await ticketEvent.methods.ticketEventCount().call();
       setTicketEventCount(eventCount);
-      console.log(eventCount)
+
+      const tokenAmount = await token.methods.balanceOf(accounts[0]).call();
+      setTokens(tokenAmount);
     }
     else{
       window.alert('Contract is not deployed to detected network')
     }
   }
 
+  const getBalance = async () => {
+    const tokenAmount = await tokenBlockchain.methods.balanceOf(account).call();
+    setTokens(tokenAmount);
+  }
+
   return (
     <Router className="App">
       <Navbar
         openWithTorus={openWithTorus}
-        account={account} />
+        account={account}
+        tokens={tokens} />
       <Switch>
         <Route path="/eventregistration">
           <EventRegistration
@@ -86,16 +99,19 @@ function App() {
         <Route path="/event/:id/:referLink/:referer">
           <EventDetail
             ticketEventBlockchain={ticketEventBlockchain}
+            getBalance={getBalance}
             account={account} />
         </Route>
         <Route path="/event/:id/:referLink">
           <EventDetail
             ticketEventBlockchain={ticketEventBlockchain}
+            getBalance={getBalance}
             account={account} />
         </Route>
         <Route path="/event/:id">
           <EventDetail
             ticketEventBlockchain={ticketEventBlockchain}
+            getBalance={getBalance}
             account={account} />
         </Route>
         <Route path="/">
