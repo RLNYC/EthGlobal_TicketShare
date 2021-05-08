@@ -60,6 +60,7 @@ function EventDetail({ ticketEventBlockchain, account }) {
         }
 
         setIsReferer(true);
+        console.log(res);
     }
     
     const purchaseTicket = async () => {
@@ -97,28 +98,29 @@ function EventDetail({ ticketEventBlockchain, account }) {
                             <h4>
                                 Ticket Price: <span className="badge badge-info">{ticketEvent.ticketPrice && window.web3.utils.fromWei(ticketEvent.ticketPrice, 'ether')} ETH</span>
                             </h4>
-                            <img src={imageURL} alt="Event Image" />
+                            
                             <p></p>
                         </div>
                     </div>
                 </div>
 
                 <div className="col-sm-12 col-md-4">
-                    <h2>Promote Event to earn reward tokens</h2>
-                    { isReferer ? (
-                        <>
-                            <button className="btn btn-success" onClick={copyRefererLink}>
-                                Copy Link
-                            </button>
-                            
-                        </>
-                    ) : <button className="btn btn-success" onClick={createReferer}>
-                            Create Referer Link
-                        </button>
-                    }
-                    <p className="mt-3"><strong>Your reward:</strong> {point} points</p>
+                    <img className="img-fluid" src={imageURL} alt="Event" />
                 </div>
             </div>
+            <h2 className="mt-3">Promote Event to earn reward tokens</h2>
+            { isReferer ? (
+                <>
+                    <button className="btn btn-success" onClick={copyRefererLink}>
+                        Copy Link
+                    </button>
+                    
+                </>
+            ) : <button className="btn btn-success" onClick={createReferer}>
+                    Create Referer Link
+                </button>
+            }
+            <p className="mt-3"><strong>Your reward:</strong> {point} points</p>
         </div>
     )
 }

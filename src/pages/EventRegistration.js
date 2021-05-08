@@ -20,7 +20,6 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
     const [ticketPrice, setTicketPrice] = useState('');
     const [quantity, setQuantity] = useState('');
     const [filePath, setFilePath] = useState('');
-    const [imageURL, setImageURL] = useState('');
 
     const createEvent = async (e) => {
         try{
@@ -75,16 +74,6 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
             setFilePath(`${ACCOUNT_ADDRESS.slice(2, 42)}/${filePath}`);
         };
         reader.readAsArrayBuffer(file);
-        downloadFileToVariable(`${ACCOUNT_ADDRESS.slice(2, 42)}/${filePath}`);
-    }
-
-
-    async function downloadFileToVariable(storagePath) {
-        let filestorage = new Filestorage(web3, true);
-        let file = await filestorage.downloadToBuffer(storagePath);
-        file = 'data:image/png;base64,' + file.toString('base64');
-        console.log(file);
-        setImageURL(file);
     }
 
     return (
@@ -92,11 +81,8 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
             <div className="card mt-3" style={{ maxWidth: '600px', margin: 'auto'}}>
                 <div className="card-body">
                     <h2 className="card-title text-center text-primary">Event Registration</h2>
-                    <img src={imageURL} alt="User Upload" />
+
                     <form className="mt-3" onSubmit={createEvent}>
-                        <input onChange={(e) => upload(e)} 
-                        type="file" id="files" />
-                        
                         <div className="form-group">
                             <label className="font-weight-bold">Name of your event</label>
                             <input
@@ -114,6 +100,15 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
                                 rows="3"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}></textarea>    
+                        </div>
+
+                        
+                        <div className="input-group mb-3">
+                            <label className="font-weight-bold">Image</label>
+                            <input
+                                onChange={(e) => upload(e)} 
+                                type="file"
+                                id="files" />
                         </div>
 
                         <div className="row">
