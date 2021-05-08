@@ -41,10 +41,10 @@ function App() {
       await window.ethereum.enable();
       loadBlockchain();
     }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-      loadBlockchain();
-    }
+    // else if (window.web3) {
+    //   window.web3 = new Web3(window.web3.currentProvider);
+    //   loadBlockchain();
+    // }
     else {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }

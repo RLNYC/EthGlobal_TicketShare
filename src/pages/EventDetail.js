@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Filestorage from '@skalenetwork/filestorage.js';
+import Web3 from 'web3';
+
+import { SKALE_CHAIN_ENDPOINT } from '../config';
+
+//create web3 connection
+const web3Provider = new Web3.providers.HttpProvider(SKALE_CHAIN_ENDPOINT);
+let web3 = new Web3(web3Provider);
 
 function EventDetail({ ticketEventBlockchain, account }) {
     const { id, referLink, referer } = useParams();
     const [ticketEvent, setTicketEvent] = useState({});
     const [isReferer, setIsReferer] = useState(false);
     const [point, setPoint] = useState(0);
+    const [imageURL, setImageURL] = useState('');
 
     useEffect(() => {
         const getTicketEvents = async () => {
             const event = await ticketEventBlockchain.methods.tickets(id).call();
-
+            downloadFileToVariable(event.imagePath);
             setTicketEvent(event);
         }
 
@@ -23,6 +32,14 @@ function EventDetail({ ticketEventBlockchain, account }) {
         const checkUserIsReferer = async () => {
             const isReferer = await ticketEventBlockchain.methods.userIsReferer(id, referLink || account, account).call();
             setIsReferer(isReferer);
+        }
+
+        const downloadFileToVariable = async (storagePath) => {
+            let filestorage = new Filestorage(web3, true);
+            let file = await filestorage.downloadToBuffer(storagePath);
+            file = 'data:image/png;base64,' + file.toString('base64');
+            console.log(file);
+            setImageURL(file);
         }
 
         if(ticketEventBlockchain){
@@ -74,12 +91,13 @@ function EventDetail({ ticketEventBlockchain, account }) {
                                     Purchase Ticket
                                 </button>
                             </div>
-                            <p>Start at {ticketEvent?.date}, {ticketEvent?.time}</p>
+                            <p>Start at {ticketEvent?.date}</p>
                             <p>Location: {ticketEvent?.location}</p>
                             <p>{ticketEvent?.description}</p>
                             <h4>
                                 Ticket Price: <span className="badge badge-info">{ticketEvent.ticketPrice && window.web3.utils.fromWei(ticketEvent.ticketPrice, 'ether')} ETH</span>
                             </h4>
+                            <img src={imageURL} alt="Event Image" />
                             <p></p>
                         </div>
                     </div>

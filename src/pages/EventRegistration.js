@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import Filestorage from '@skalenetwork/filestorage.js';
+import Web3 from 'web3';
+
+import { SKALE_CHAIN_ENDPOINT, ACCOUNT_ADDRESS, YOUR_PRIVATE_KEY } from '../config';
+
+//create web3 connection
+const web3Provider = new Web3.providers.HttpProvider(SKALE_CHAIN_ENDPOINT);
+let web3 = new Web3(web3Provider);
 
 function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account }) {
     const history = useHistory();
@@ -11,11 +19,14 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
     const [location, setLocation] = useState('');
     const [ticketPrice, setTicketPrice] = useState('');
     const [quantity, setQuantity] = useState('');
+    const [filePath, setFilePath] = useState('');
+    const [imageURL, setImageURL] = useState('');
 
     const createEvent = async (e) => {
         try{
             e.preventDefault();
-            const res = await ticketEventBlockchain.methods.createEvent(name, description, date, time, location, window.web3.utils.toWei(ticketPrice, 'ether'), quantity).send({ from: account });
+            const startDate = date + ' ' + time;
+            const res = await ticketEventBlockchain.methods.createEvent(name, description, startDate, location, window.web3.utils.toWei(ticketPrice, 'ether'), quantity, filePath).send({ from: account });
             console.log(res);
 
             if(res) setTicketEventCount(res.events.TicketCreated.returnValues.eventId);
@@ -27,13 +38,65 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
         }
     }
 
+    // file upload
+    async function upload(event, specificDirectory=''){
+        event.preventDefault();
+
+        //get filestorage instance
+        let filestorage = new Filestorage(web3, true);
+
+        //provide your account & private key
+        //note this must include the 0x prefix
+        let privateKey = '0x' + YOUR_PRIVATE_KEY;
+        let accountAddress = ACCOUNT_ADDRESS;
+
+        //get file data from file upload input field
+        let file = document.getElementById('files').files[0];
+        let reader = new FileReader();
+
+        //file path in account tree (dirA/file.name)
+        let filePath;
+        if (specificDirectory === '') {
+            filePath = file.name;
+        } else {
+            filePath = specificDirectory + '/' + file.name;
+        }
+
+        //file storage method to upload file
+        reader.onload = async function(e) {
+            const arrayBuffer = reader.result
+            const bytes = new Uint8Array(arrayBuffer);
+            filestorage.uploadFile(
+                accountAddress, 
+                filePath, 
+                bytes,
+                privateKey
+            );
+            setFilePath(`${ACCOUNT_ADDRESS.slice(2, 42)}/${filePath}`);
+        };
+        reader.readAsArrayBuffer(file);
+        downloadFileToVariable(`${ACCOUNT_ADDRESS.slice(2, 42)}/${filePath}`);
+    }
+
+
+    async function downloadFileToVariable(storagePath) {
+        let filestorage = new Filestorage(web3, true);
+        let file = await filestorage.downloadToBuffer(storagePath);
+        file = 'data:image/png;base64,' + file.toString('base64');
+        console.log(file);
+        setImageURL(file);
+    }
+
     return (
         <div className="container">
             <div className="card mt-3" style={{ maxWidth: '600px', margin: 'auto'}}>
                 <div className="card-body">
-                    <h2 class="card-title text-center text-primary">Event Registration</h2>
-
+                    <h2 className="card-title text-center text-primary">Event Registration</h2>
+                    <img src={imageURL} alt="User Upload" />
                     <form className="mt-3" onSubmit={createEvent}>
+                        <input onChange={(e) => upload(e)} 
+                        type="file" id="files" />
+                        
                         <div className="form-group">
                             <label className="font-weight-bold">Name of your event</label>
                             <input

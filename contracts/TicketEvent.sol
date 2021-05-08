@@ -11,10 +11,10 @@ contract TicketEvent {
         string name;
         string description;
         string date;
-        string time;
         string location;
         uint ticketPrice;
         uint quantity;
+        string imagePath;
         address payable owner;
     }
 
@@ -29,10 +29,10 @@ contract TicketEvent {
         string name,
         string description,
         string date,
-        string time,
         string location,
         uint ticketPrice,
         uint quantity,
+        string imagePath,
         address payable owner
     );
 
@@ -70,11 +70,11 @@ contract TicketEvent {
         return false;
     }
 
-    function createEvent(string memory _name, string memory _description, string memory _date, string memory _time, string memory _location, uint _ticketPrice, uint _quantity) external {
+    function createEvent(string memory _name, string memory _description, string memory _date, string memory _location, uint _ticketPrice, uint _quantity, string memory _imagePath) external {
         ticketEventCount++;
 
-        tickets[ticketEventCount] = Ticket(ticketEventCount, _name, _description, _date, _time, _location, _ticketPrice, _quantity, msg.sender);
-        emit TicketCreated(ticketEventCount, _name, _description, _date, _time, _location, _ticketPrice, _quantity, msg.sender);
+        tickets[ticketEventCount] = Ticket(ticketEventCount, _name, _description, _date, _location, _ticketPrice, _quantity, _imagePath, msg.sender);
+        emit TicketCreated(ticketEventCount, _name, _description, _date, _location, _ticketPrice, _quantity, _imagePath, msg.sender);
     }
 
     // a user sign up for refer
