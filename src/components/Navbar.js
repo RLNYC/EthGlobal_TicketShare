@@ -5,13 +5,15 @@ function Navbar({ account, tokens }) {
     return (
         <nav className="navbar navbar-light bg-light">
             <div className="container">
-                <Link className="navbar-brand mb-0 h1" to="/">Ticket Share</Link>
+                <Link className="navbar-brand mb-0 h1 p-0" to="/">
+                    <img style={{ width: '180px' }} src="./ticketshare.jpg" alt="Ticket Share" />
+                </Link>
                 <div className="d-flex align-items-center">
                     {account && <p className="badge mt-3 mr-3">
                     {window.web3.utils?.fromWei(tokens.toString(), 'Ether')} TST
                     </p>}
                     <button
-                        className="btn btn-outline-primary my-2 my-sm-0"
+                        className="btn btn-warning btn-lg my-2 my-sm-0"
                         data-toggle="modal"
                         data-target="#walletModal"
                     >

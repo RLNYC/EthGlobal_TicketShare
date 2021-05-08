@@ -98,7 +98,7 @@ function EventDetail({ ticketEventBlockchain, getBalance, account }) {
                         <div className="card-body">
                             <div className="d-flex justify-content-between">
                                 <h2>{ticketEvent?.name}</h2>
-                                <button className="btn btn-primary mb-4" onClick={purchaseTicket}>
+                                <button className="btn btn-danger mb-4" onClick={purchaseTicket}>
                                     Purchase Ticket
                                 </button>
                             </div>

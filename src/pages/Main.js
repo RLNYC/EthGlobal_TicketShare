@@ -24,7 +24,7 @@ function Main({ ticketEventBlockchain, ticketEventCount }) {
         <div className="container">
             <div className="d-flex justify-content-between align-items-center">
                 <h1>List of Events</h1>
-                <Link to="/eventregistration" className="btn btn-primary btn-lg my-3">
+                <Link to="/eventregistration" className="btn btn-danger btn-lg my-3">
                     Register Event
                 </Link>
             </div>
@@ -41,10 +41,10 @@ function Main({ ticketEventBlockchain, ticketEventCount }) {
                                 <p>{window.web3.utils.fromWei(ticketEvent.ticketPrice, 'ether')} ETH</p>
                             </div>
                             <div className="col-sm-6 d-flex flex-column align-items-end">
-                                <button className="btn btn-primary btn-lg mt-4 mb-2">
+                                <button className="btn btn-outline-warning btn-lg mt-4 mb-2">
                                     Promotion Reward Tally
                                 </button>
-                                <Link className="btn btn-secondary btn-lg" to={`/event/${ticketEvent.eventId}`}>
+                                <Link className="btn btn-outline-danger btn-lg" to={`/event/${ticketEvent.eventId}`}>
                                     Earn Promotion Reward
                                 </Link>
                             </div>

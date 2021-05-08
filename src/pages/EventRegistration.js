@@ -80,7 +80,7 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
         <div className="container">
             <div className="card mt-3" style={{ maxWidth: '600px', margin: 'auto'}}>
                 <div className="card-body">
-                    <h2 className="card-title text-center text-primary">Event Registration</h2>
+                    <h2 className="card-title text-center text-warning">Event Registration</h2>
 
                     <form className="mt-3" onSubmit={createEvent}>
                         <div className="form-group">
@@ -103,8 +103,9 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
                         </div>
 
                         
-                        <div className="input-group mb-3">
+                        <div className="form-group mb-3">
                             <label className="font-weight-bold">Image</label>
+                            <br />
                             <input
                                 onChange={(e) => upload(e)} 
                                 type="file"
@@ -167,9 +168,15 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
                             </div>
                         </div>
 
-                        <p className="text-muted">* Registration Cost: 0.1 ETH</p>
-
-                        <button className="btn btn-primary" type="submit" disabled={!account}>Register Event</button>
+                        <div className="d-flex align-items-center">
+                            <button className="btn btn-danger btn-lg" type="submit" disabled={!account}>
+                                Register Event
+                            </button>
+                            <p className="text-muted mt-3 ml-2">
+                                * Registration Cost: 0.1 ETH
+                            </p>
+                        </div>
+                        
                     </form>
                 </div>
             </div>
