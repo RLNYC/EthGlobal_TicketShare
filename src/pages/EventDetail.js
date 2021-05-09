@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import Filestorage from '@skalenetwork/filestorage.js';
 import Web3 from 'web3';
 
+import Background from '../images/background.png';
 import { SKALE_CHAIN_ENDPOINT } from '../config';
 
 //create web3 connection
@@ -97,7 +98,7 @@ function EventDetail({ ticketEventBlockchain, getBalance, account }) {
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex justify-content-between">
-                                <h2>{ticketEvent?.name}</h2>
+                                <h2 className="text-warning">{ticketEvent?.name}</h2>
                                 <button className="btn btn-danger mb-4" onClick={purchaseTicket}>
                                     Purchase Ticket
                                 </button>
@@ -115,7 +116,7 @@ function EventDetail({ ticketEventBlockchain, getBalance, account }) {
                 </div>
 
                 <div className="col-sm-12 col-md-4">
-                    <img className="img-fluid" src={imageURL} alt="Event" />
+                    <img className="img-fluid" src={imageURL || Background} alt="Event" />
                 </div>
             </div>
             <h2 className="mt-3">Promote Event to earn reward tokens</h2>

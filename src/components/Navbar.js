@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import Logo from '../images/ticketshare.jpg';
+
 function Navbar({ account, tokens }) {
     return (
         <nav className="navbar navbar-light bg-light">
             <div className="container">
                 <Link className="navbar-brand mb-0 h1 p-0" to="/">
-                    <img style={{ width: '180px' }} src="./ticketshare.jpg" alt="Ticket Share" />
+                    <img style={{ width: '180px' }} src={Logo} alt="Ticket Share" />
                 </Link>
                 <div className="d-flex align-items-center">
                     {account && <p className="badge mt-3 mr-3">

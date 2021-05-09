@@ -97,22 +97,31 @@ function App() {
             setTicketEventCount={setTicketEventCount}  />
         </Route>
         <Route path="/event/:id/:referLink/:referer">
-          <EventDetail
-            ticketEventBlockchain={ticketEventBlockchain}
-            getBalance={getBalance}
-            account={account} />
+          {account
+            ? <EventDetail
+                ticketEventBlockchain={ticketEventBlockchain}
+                getBalance={getBalance}
+                account={account} />
+            : <div className="container pt-3"><h1>Connect to your wallet to see event</h1></div>
+          }
         </Route>
         <Route path="/event/:id/:referLink">
-          <EventDetail
-            ticketEventBlockchain={ticketEventBlockchain}
-            getBalance={getBalance}
-            account={account} />
+          {account
+            ? <EventDetail
+                ticketEventBlockchain={ticketEventBlockchain}
+                getBalance={getBalance}
+                account={account} />
+            : <div className="container pt-3"><h1>Connect to your wallet to see event</h1></div>
+          }
         </Route>
         <Route path="/event/:id">
-          <EventDetail
-            ticketEventBlockchain={ticketEventBlockchain}
-            getBalance={getBalance}
-            account={account} />
+          {account
+            ? <EventDetail
+                ticketEventBlockchain={ticketEventBlockchain}
+                getBalance={getBalance}
+                account={account} />
+            : <div className="container pt-3"><h1>Connect to your wallet to see event</h1></div>
+          }
         </Route>
         <Route path="/">
           {account

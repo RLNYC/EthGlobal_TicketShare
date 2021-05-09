@@ -36,15 +36,15 @@ function Main({ ticketEventBlockchain, ticketEventCount }) {
                         <div className="row">
                             <div className="col-sm-6" >
                                 <h2><Link to={`/event/${ticketEvent.eventId}`}>{ticketEvent.name}</Link></h2>
-                                <p>{ticketEvent.date} {ticketEvent.time}</p>
-                                <p>{ticketEvent.location}</p>
-                                <p>{window.web3.utils.fromWei(ticketEvent.ticketPrice, 'ether')} ETH</p>
+                                <p><strong>Start Date:</strong> {ticketEvent.date} {ticketEvent.time}</p>
+                                <p><strong>Location: </strong>{ticketEvent.location}</p>
+                                <p><strong>Cost: </strong>{window.web3.utils.fromWei(ticketEvent.ticketPrice, 'ether')} ETH</p>
                             </div>
                             <div className="col-sm-6 d-flex flex-column align-items-end">
-                                <button className="btn btn-outline-warning btn-lg mt-4 mb-2">
-                                    Promotion Reward Tally
-                                </button>
-                                <Link className="btn btn-outline-danger btn-lg" to={`/event/${ticketEvent.eventId}`}>
+                                <Link className="btn btn-outline-warning btn-lg mt-4 mb-2" style={{ width: '250px'}} to={`/event/${ticketEvent.eventId}`}>
+                                    See Event Detail
+                                </Link>
+                                <Link className="btn btn-outline-danger btn-lg" style={{ width: '250px'}} to={`/event/${ticketEvent.eventId}`}>
                                     Earn Promotion Reward
                                 </Link>
                             </div>

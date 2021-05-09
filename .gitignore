@@ -27,3 +27,6 @@ yarn.lock
 abis
 .env
 config.js
+.firebase
+.firebaserc
+firebase.json

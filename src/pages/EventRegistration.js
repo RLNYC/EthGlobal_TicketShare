@@ -153,6 +153,8 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
                                         className="form-control"
                                         type="number"
                                         value={ticketPrice}
+                                        min="0"
+                                        step="0.1"
                                         onChange={(e) => setTicketPrice(e.target.value)} />
                                 </div>
                             </div>
@@ -162,6 +164,7 @@ function EventRegistration({ ticketEventBlockchain, setTicketEventCount, account
                                     <input
                                         className="form-control"
                                         type="number"
+                                        min="1"
                                         value={quantity}
                                         onChange={(e) => setQuantity(e.target.value)} />
                                 </div>
